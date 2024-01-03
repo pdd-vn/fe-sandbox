@@ -1,38 +1,127 @@
-.App {
-  text-align: center;
+.App {}
+
+.nft-gallery {
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.nft-frame {
+  background-image: linear-gradient(to right, rgb(255, 82, 82), rgb(255, 255, 121));
+  padding: 16px;
+  width: 200px;
+  height: 200px;
+  border-radius: 4px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.nft-card {
+  height: 100%;
+  /* Occupy the full height of the nft-frame */
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.nft-card:hover {
+  transform: scale(1.1);
+}
+
+.nft-card:hover .nft-info {
+  opacity: 1;
+  transform: translateY(0);
+  z-index: 1;
+}
+
+.nft-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.button-container {
+  /* Add your styles for the button container */
+  display: flex;
+  justify-content: center;
+}
+
+.lend-button,
+.claim-button {
+  /* Add your styles for the buy and like buttons */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  margin-top: 5px;
+  padding: 6px;
+  border: 3px solid black;
+  margin-right: 4px;
+  /* z-index: 1; */
+  background: #99dcff;
+  /* border-radius: 4px; */
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer
+}
+
+.lend-button:hover {
+  /* transform: scale(1.2); */
+  color: white;
+  background: black;
+  z-index: 1
+}
+
+.claim-button:hover {
+  /* transform: scale(1.2); */
+  color: white;
+  background: black;
+  z-index: 1
+}
+
+.metamask-button {
+  margin-top: 20px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: right;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-key {
+  font-weight: 600;
+}
+
+.info-value {
+  padding-left: 4px;
+}
+
+.info-item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.nft-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
