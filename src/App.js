@@ -1,4 +1,3 @@
-require('dotenv').config()
 import './css/App.css';
 import React, { useState, useEffect } from 'react'
 import {
@@ -9,9 +8,9 @@ import {
 import {
   NFTCard
 } from './show-nfts.js';
+import { machine_addr, erc20_addr } from './config.js';
 const ethers = require("ethers");
 const typechain = require("nft-lending-machine");
-
 
 function App() {
   useEffect(() => {
@@ -22,16 +21,22 @@ function App() {
   const getNFTsList = async () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const machine = typechain.LendingMachine__factory.connect(process.env.machine_addr, provider);
+      const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
+
+      const signer = provider.getSigner();
+      const balance = await typechain.LME20T__factory.connect(erc20_addr, provider).balanceOf(signer.getAddress());
+      console.log(`signer balance: ${balance}`)
 
       const nftList = await machine.list_nfts();
       let list = [];
       nftList.forEach(async (e) => {
         list.push({
           img_url: await machine.tokenURI(e.token_id),
-          price: (e.is_deposited) ? e.price : null,
           token_id: e.token_id,
-          owner: e.owner
+          owner: e.owner,
+          price: (e.is_deposited) ? e.price : null,
+          tmp_owner: e.tmp_owner,
+          is_deposited: e.is_deposited
         })
         setListNft(prev => [...list]);
       });
@@ -76,14 +81,13 @@ function App() {
   const updateNFTsList = async () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const machine = typechain.LendingMachine__factory.connect(process.env.machine_addr, provider);
+      const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
       const signer = provider.getSigner()
 
       mintQueue.forEach(async (e) => {
-        console.log(`uri: ${e.uri} - owner: ${e.owner}`)
         if (e.uri.match(/\.(jpeg|jpg|gif|png)$/) != null) {
           await machine.connect(signer).mint_new_nft(e.uri)
-          console.log(`Num nfts: ${await machine.connect(signer).get_num_nfts()}`)
+          console.log(`Current num nfts: ${await machine.connect(signer).get_num_nfts()}`)
         } else {
           console.log(`Invalid image uri: ${e.uri}`)
         }
@@ -107,6 +111,8 @@ function App() {
               nft_price={nft.price}
               nft_id={nft.token_id}
               nft_owner={nft.owner}
+              nft_tmp_owner={nft.tmp_owner}
+              nft_is_deposited={nft.is_deposited}
             />
           </div>
         ))}
