@@ -47,6 +47,7 @@
   /* Add your styles for the button container */
   display: flex;
   justify-content: center;
+  margin-top: 15px;
 }
 
 .lend-button,
@@ -124,4 +125,34 @@
   opacity: 0;
   transform: translateY(-20px);
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.function-bar-container {
+  justify-content: right;
+  display: flex;
+  margin-top: 10px;
+  height: 50px;
+  gap: 5px;
+}
+
+.mint-button {
+  /* Add your styles for the buy and like buttons */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  border: 2px solid grey;
+  background: #99dcff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 50px;
+  background-image: linear-gradient(to right, rgb(82, 206, 255), rgb(255, 255, 121));
+}
+
+.mint-button:hover {
+  /* transform: scale(1.2); */
+  color: white;
+  background: black;
+  z-index: 1
 }

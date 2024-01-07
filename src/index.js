@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { MetaMaskUIProvider } from '@metamask/sdk-react-ui';
-import './index.css'
+import './css/index.css'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root')
