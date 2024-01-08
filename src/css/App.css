@@ -11,8 +11,8 @@
 .nft-frame {
   background-image: linear-gradient(to right, rgb(255, 82, 82), rgb(255, 255, 121));
   padding: 16px;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   border-radius: 4px;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .nft-card-text-box {
-  width: 40px;
+  width: 50px;
   margin-top: 5px;
   padding: 6px;
   border: 3px solid black;
@@ -114,20 +114,28 @@
   flex-direction: column;
   gap: 8px;
   font-size: 12px;
+  width: 150px;
 }
 
 .info-key {
   font-weight: 600;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.8)
 }
 
 .info-value {
   padding-left: 4px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.8);
 }
 
 .info-item {
   width: 100%;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 1px;
+  row-gap: 1px;
+  /* flex-direction: row; */
 }
 
 .nft-info {
@@ -142,7 +150,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   opacity: 0;
   transform: translateY(-20px);
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -152,6 +159,7 @@
   justify-content: right;
   display: flex;
   margin-top: 10px;
+  margin-right: 10px;
   height: 50px;
   gap: 5px;
 }

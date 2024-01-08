@@ -5,19 +5,14 @@ const ethers = require("ethers");
 const typechain = require("nft-lending-machine");
 
 function NFTImage({ nft_img_url, nft_id, nft_lend_duration, nft_is_deposited }) {
-  const lend_duration = (nft_is_deposited) ? (
-    <>
-      <div className='info-key'>Lend duration:</div><div className='info-value'>{`${nft_lend_duration} days`}</div>
-    </>) : <></>
-
   return (
     <div className="nft-card">
       <img src={nft_img_url} alt="NFT" className="nft-image" />
       <div className='nft-info'>
         <div className='info-container'>
           <div className='info-item'>
-            <div className='info-key'>Id:</div><div className='info-value'>{`${nft_id}`}</div>
-            {/* {lend_duration} */}
+            <div className='info-key'>Id</div><div className='info-value'>{`${nft_id}`}</div>
+            <div className='info-key'>Lend duration</div><div className='info-value'>{(nft_is_deposited) ? `${nft_lend_duration} days` : "N/A"}</div>
           </div>
         </div>
       </div>

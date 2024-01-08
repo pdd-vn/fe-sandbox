@@ -36,7 +36,7 @@ function App() {
         setListNft(prev => [...list]);
       });
     } catch (error) {
-      console.log(error)
+      console.log(`ERROR: ${error}`)
     }
   }
 
@@ -69,7 +69,6 @@ function App() {
       </div></>
   }
 
-
   useEffect(() => {
     updateNFTsList();
   }, [mintQueue]);
@@ -79,16 +78,18 @@ function App() {
       const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
       const signer = provider.getSigner()
 
-      mintQueue.forEach(async (e) => {
-        if (e.uri.match(/\.(jpeg|jpg|gif|png)$/) != null) {
-          await machine.connect(signer).mint_new_nft(e.uri)
+      const qlen = mintQueue.length;
+      for (let i = 0; i < qlen; i++) {
+        const item = mintQueue.pop();
+        if (item.uri.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+          await machine.connect(signer).mint_new_nft(item.uri)
           console.log(`Current num nfts: ${await machine.connect(signer).get_num_nfts()}`)
         } else {
-          console.log(`Invalid image uri: ${e.uri}`)
+          console.log(`Invalid image uri: ${item.uri}`)
         }
-      })
+      }
     } catch (error) {
-      console.log(error)
+      console.log(`ERROR: ${error}`)
     }
   }
 
@@ -103,10 +104,14 @@ function App() {
 
   let [LME20T_balance, set_LME20T_balance] = useState([]);
   const updateLME20Tbalance = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const erc20 = typechain.LME20T__factory.connect(erc20_addr, provider);
-    set_LME20T_balance(await erc20.connect(signer).balanceOf(signer.getAddress()));
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const erc20 = typechain.LME20T__factory.connect(erc20_addr, provider);
+      set_LME20T_balance(await erc20.connect(signer).balanceOf(signer.getAddress()));
+    } catch (error) {
+      console.log(`ERROR: ${error}`)
+    }
   }
 
   let [interest_refresh, set_interest_refresh] = useState(false);
@@ -120,11 +125,15 @@ function App() {
 
   let [interest, set_interest] = useState(0);
   const updateInterest = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
-    const signer = provider.getSigner()
-    const interest = await machine.connect(signer).INTEREST();
-    set_interest(interest)
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
+      const signer = provider.getSigner()
+      const interest = await machine.connect(signer).INTEREST();
+      set_interest(interest)
+    } catch (error) {
+      console.log(`ERROR: ${error}`)
+    }
   }
 
   return (
