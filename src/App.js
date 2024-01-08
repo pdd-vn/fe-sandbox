@@ -1,9 +1,7 @@
 import './css/App.css';
 import React, { useState, useEffect } from 'react'
 import {
-  MetaMaskButton, useAccount,
-  useSDK,
-  useSignMessage
+  MetaMaskButton,
 } from '@metamask/sdk-react-ui';
 import {
   NFTCard
@@ -23,10 +21,6 @@ function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
 
-      const signer = provider.getSigner();
-      const balance = await typechain.LME20T__factory.connect(erc20_addr, provider).balanceOf(signer.getAddress());
-      console.log(`signer balance: ${balance}`)
-
       const nftList = await machine.list_nfts();
       let list = [];
       nftList.forEach(async (e) => {
@@ -34,9 +28,10 @@ function App() {
           img_url: await machine.tokenURI(e.token_id),
           token_id: e.token_id,
           owner: e.owner,
-          price: (e.is_deposited) ? e.price : null,
+          price: (e.is_deposited || e.tmp_owner != 0) ? e.price : null,
           tmp_owner: e.tmp_owner,
-          is_deposited: e.is_deposited
+          is_deposited: e.is_deposited,
+          lend_duration: e.lend_duration
         })
         setListNft(prev => [...list]);
       });
@@ -97,9 +92,46 @@ function App() {
     }
   }
 
+  let [LME20T_refresh, set_LME20T_refresh] = useState(false);
+  const handle_LME20T_click = async () => {
+    set_LME20T_refresh(!LME20T_refresh)
+    console.log("refreshed!")
+  }
+  useEffect(() => {
+    updateLME20Tbalance();
+  }, [LME20T_refresh]);
+
+  let [LME20T_balance, set_LME20T_balance] = useState([]);
+  const updateLME20Tbalance = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const erc20 = typechain.LME20T__factory.connect(erc20_addr, provider);
+    set_LME20T_balance(await erc20.connect(signer).balanceOf(signer.getAddress()));
+  }
+
+  let [interest_refresh, set_interest_refresh] = useState(false);
+  const handle_interest_click = async () => {
+    set_interest_refresh(!interest_refresh)
+    console.log("refreshed!")
+  }
+  useEffect(() => {
+    updateInterest();
+  }, [interest_refresh]);
+
+  let [interest, set_interest] = useState(0);
+  const updateInterest = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
+    const signer = provider.getSigner()
+    const interest = await machine.connect(signer).INTEREST();
+    set_interest(interest)
+  }
+
   return (
     <div className="App" >
       <div className="function-bar-container">
+        <button className='Interest' onClick={handle_interest_click}>{`Interest: ${interest} LME20T`}</button>
+        <button className='LME20Tbalance' onClick={handle_LME20T_click}>{`LME20T balance: ${LME20T_balance}`}</button>
         <MintNFT />
         <MetaMaskButton theme={"light"} color="white"></MetaMaskButton>
       </div>
@@ -113,6 +145,7 @@ function App() {
               nft_owner={nft.owner}
               nft_tmp_owner={nft.tmp_owner}
               nft_is_deposited={nft.is_deposited}
+              nft_lend_duration={nft.lend_duration}
             />
           </div>
         ))}

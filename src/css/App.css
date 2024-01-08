@@ -4,7 +4,7 @@
   justify-content: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 43px;
   margin-top: 20px;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .nft-card-text-box {
-  width: 30px;
+  width: 40px;
   margin-top: 5px;
   padding: 6px;
   border: 3px solid black;
@@ -113,6 +113,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  font-size: 12px;
 }
 
 .info-key {
@@ -160,7 +161,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  border: 2px solid grey;
+  border: 2px solid black;
   background: #99dcff;
   border-radius: 8px;
   font-size: 14px;
@@ -180,4 +181,34 @@
 .mint-uri-text-box {
   margin-right: 5px;
   border-radius: 4px;
+}
+
+.LME20Tbalance {
+  /* Add your styles for the buy and like buttons */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  border: 2px solid black;
+  background: #99dcff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 50px;
+  background-image: linear-gradient(to right, rgb(82, 206, 255), rgb(255, 255, 121));
+}
+
+.Interest {
+  /* Add your styles for the buy and like buttons */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  border: 2px solid black;
+  background: #99dcff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 50px;
+  background-image: linear-gradient(to right, rgb(82, 206, 255), rgb(255, 255, 121));
 }
