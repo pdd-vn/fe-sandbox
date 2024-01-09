@@ -25,8 +25,16 @@ function App() {
       let list = [];
       nftList.forEach(async (e) => {
         const uri = await machine.tokenURI(e.token_id)
-        const response = await fetch(uri);
-        const metadata = await response.json();
+        let metadata;
+        try {
+          const response = await fetch(uri);
+          metadata = await response.json();
+        } catch (error) {
+          metadata = {
+            name: "foo",
+            imgUrl: uri
+          }
+        }
 
         list.push({
           name: metadata.name,
