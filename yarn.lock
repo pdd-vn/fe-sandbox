@@ -9248,10 +9248,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-nft-lending-machine@0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/nft-lending-machine/-/nft-lending-machine-0.0.4.tgz#f2678153f1d2d347964544baadbbc29ffcd0ec31"
-  integrity sha512-ze6MoYGxgeV2JhAM2yXO86IOdk1f4GnVLEtQSg7no3J3tOd/UqzBlnXkefMV2mG7YUupkJ47DCIsXyABmf6N1A==
+nft-lending-machine@0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/nft-lending-machine/-/nft-lending-machine-0.0.5.tgz#2106dbca4957be8993bff34983814b95afffdfbc"
+  integrity sha512-jyK2B4xZAFKcURxEcfBJDa2d0tb2EeDiUuNbaMfcI7jd9YFxFcv2Xy/DNsafdF8a2TcbssIdngFmbGd+KCCz+g==
   dependencies:
     "@openzeppelin/contracts" "^5.0.1"
     dotenv "^16.3.1"
