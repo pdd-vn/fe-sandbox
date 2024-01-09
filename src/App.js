@@ -24,8 +24,13 @@ function App() {
       const nftList = await machine.list_nfts();
       let list = [];
       nftList.forEach(async (e) => {
+        const uri = await machine.tokenURI(e.token_id)
+        const response = await fetch(uri);
+        const metadata = await response.json();
+
         list.push({
-          img_url: await machine.tokenURI(e.token_id),
+          name: metadata.name,
+          img_url: metadata.imgUrl,
           token_id: e.token_id,
           owner: e.owner,
           price: (e.is_deposited || e.tmp_owner != 0) ? e.price : null,
@@ -81,7 +86,7 @@ function App() {
       const qlen = mintQueue.length;
       for (let i = 0; i < qlen; i++) {
         const item = mintQueue.pop();
-        if (item.uri.match(/\.(jpeg|jpg|gif|png)$/) != null) {
+        if (item.uri.match(/\.(jpeg|jpg|gif|png)$/) != null || item.uri.startsWith("https://gateway.pinata.cloud/ipfs/")) {
           await machine.connect(signer).mint_new_nft(item.uri)
           console.log(`Current num nfts: ${await machine.connect(signer).get_num_nfts()}`)
         } else {
@@ -136,6 +141,8 @@ function App() {
     }
   }
 
+  window.ethereum.on('accountsChanged', async function () { window.location.reload() });
+
   return (
     <div className="App" >
       <div className="function-bar-container">
@@ -155,6 +162,7 @@ function App() {
               nft_tmp_owner={nft.tmp_owner}
               nft_is_deposited={nft.is_deposited}
               nft_lend_duration={nft.lend_duration}
+              nft_name={nft.name}
             />
           </div>
         ))}
