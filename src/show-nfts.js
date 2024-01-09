@@ -1,10 +1,10 @@
 import './css/App.css';
 import React, { useState } from 'react'
-import { machine_addr, owner_addr, erc20_addr } from './config';
+import { machine_addr, erc20_addr } from './config';
 const ethers = require("ethers");
 const typechain = require("nft-lending-machine");
 
-function NFTImage({ nft_img_url, nft_id, nft_lend_duration, nft_is_deposited }) {
+function NFTImage({ nft_img_url, nft_id, nft_lend_duration, nft_is_deposited, nft_name }) {
   return (
     <div className="nft-card">
       <img src={nft_img_url} alt="NFT" className="nft-image" />
@@ -12,7 +12,8 @@ function NFTImage({ nft_img_url, nft_id, nft_lend_duration, nft_is_deposited }) 
         <div className='info-container'>
           <div className='info-item'>
             <div className='info-key'>Id</div><div className='info-value'>{`${nft_id}`}</div>
-            <div className='info-key'>Lend duration</div><div className='info-value'>{(nft_is_deposited) ? `${nft_lend_duration} days` : "N/A"}</div>
+            <div className='info-key'>Name</div><div className='info-value'>{`${nft_name}`}</div>
+            <div className='info-key'>Lend duration</div><div className='info-value'>{(nft_is_deposited || nft_lend_duration != 0) ? `${nft_lend_duration} time unit` : "N/A"}</div>
           </div>
         </div>
       </div>
@@ -20,14 +21,13 @@ function NFTImage({ nft_img_url, nft_id, nft_lend_duration, nft_is_deposited }) 
   )
 }
 
-export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_owner, nft_is_deposited, nft_lend_duration }) {
+export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_owner, nft_is_deposited, nft_lend_duration, nft_name }) {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const [deposit_amount, set_deposit_amount] = useState(0);
   const [lend_duration, set_lend_duration] = useState(0);
 
   const signer = provider.getSigner();
   const erc20 = typechain.LME20T__factory.connect(erc20_addr, provider);
-  const contract_owner = provider.getSigner(owner_addr);
   const machine = typechain.LendingMachine__factory.connect(machine_addr, provider);
 
   const [signer_addr, set_signer_addr] = useState("")
@@ -43,7 +43,8 @@ export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_own
   const onLend = async () => {
     console.log(`Lend button clicked for NFT ${nft_id}`);
     if (signer != nft_owner) {
-      await erc20.connect(signer).approve(machine_addr, nft_price);
+      const tx = await erc20.connect(signer).approve(machine_addr, nft_price);
+      await provider.waitForTransaction(tx.hash);
       await machine.connect(signer).lend(nft_id);
       console.log(`Lended ${nft_id} with ${nft_price} LME20T`);
     }
@@ -52,7 +53,6 @@ export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_own
   const onClaim = async () => {
     console.log(`Claim button clicked for NFT ${nft_id}`);
     if (signer_addr == nft_tmp_owner) {
-      await machine.connect(contract_owner).approve(signer_addr, nft_id);
       await machine.connect(signer).claim(nft_id);
       console.log(`Claimed ${nft_id}`);
     }
@@ -70,8 +70,8 @@ export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_own
   const onRepay = async () => {
     console.log(`Repay button cliked for NFT ${nft_id}`)
     if (signer_addr == nft_owner) {
-      await erc20.connect(signer).approve(machine_addr, nft_price);
-      await machine.connect(contract_owner).approve(signer_addr, nft_id);
+      const tx = await erc20.connect(signer).approve(machine_addr, nft_price);
+      await provider.waitForTransaction(tx.hash);
       await machine.connect(signer).repay(nft_id);
       console.log(`Repayed ${nft_id} with ${nft_price} LME20T`);
     }
@@ -112,7 +112,7 @@ export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_own
   }
 
   let claim_button = (
-    nft_price != null && nft_is_deposited && signer_addr == nft_tmp_owner
+    nft_price != null && signer_addr == nft_tmp_owner
   ) ? (
     <button onClick={onClaim} className="nft-card-button">
       Claim
@@ -129,7 +129,7 @@ export function NFTCard({ nft_img_url, nft_price, nft_id, nft_owner, nft_tmp_own
 
   return (
     <>
-      <NFTImage nft_img_url={nft_img_url} nft_id={nft_id} nft_lend_duration={nft_lend_duration} nft_is_deposited={nft_is_deposited} />
+      <NFTImage nft_img_url={nft_img_url} nft_id={nft_id} nft_lend_duration={nft_lend_duration} nft_is_deposited={nft_is_deposited} nft_name={nft_name} />
       <div className="nft-button-container">
         {lend_button}
         {deposit_button}
